@@ -1,0 +1,32 @@
+#cloud-config-wheezy
+#Originally from http://bazaar.launchpad.net/~cloud-init-dev/cloud-init/trunk/view/head:/doc/examples/cloud-config.txt
+#Does a few basic Debian steps when spinning up a Debian wheezy AMI
+# Update apt database on first boot
+# (ie run apt-get update)
+#
+# Default: true
+#
+apt_update: true
+
+# Upgrade the instance on first boot
+# (ie run apt-get upgrade)
+#
+# Default: false
+#
+apt_upgrade: true
+
+#Setup our apt sources
+apt_sources:
+ - source: deb http://mirrors.kernel.org/debian/ wheezy main
+ - source: deb-src http://mirrors.kernel.org/debian/ wheezy main
+
+#Setup packages
+packages:
+ - sudo
+ - lvm2
+ - build-essential
+ - kernel-package
+ - libncurses5
+ - libncurses5-dev
+ - git 
+ - distcc
