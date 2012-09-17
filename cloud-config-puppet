@@ -1,0 +1,84 @@
+#cloud-config
+#Originally from http://bazaar.launchpad.net/~cloud-init-dev/cloud-init/trunk/view/head:/doc/examples/cloud-config.txt
+#Does a few basic Debian steps when spinning up a Debian wheezy AMI
+# Update apt database on first boot
+# (ie run apt-get update)
+#
+# Default: true
+#
+apt_update: true
+
+# Upgrade the instance on first boot
+# (ie run apt-get upgrade)
+#
+# Default: false
+#
+apt_upgrade: true
+
+#Setup our apt sources
+apt_sources:
+ - source: deb http://mirrors.kernel.org/ubuntu/ precise main
+ - source: deb-src http://mirrors.kernel.org/ubuntu/ precise main
+
+#Setup packages
+packages:
+ - sudo
+ - lvm2
+ - libncurses5
+ - libncurses5-dev
+ - git 
+ - puppet
+
+# This is an example file to automatically setup and run puppetd
+# when the instance boots for the first time.
+# Make sure that this file is valid yaml before starting instances.
+# It should be passed as user-data when starting the instance.
+puppet:
+ # Every key present in the conf object will be added to puppet.conf:
+ # [name]
+ # subkey=value
+ #
+ # For example the configuration below will have the following section
+ # added to puppet.conf:
+ # [puppetd]
+ # server=puppetmaster.example.org
+ # certname=i-0123456.ip-X-Y-Z.cloud.internal
+ #
+ # The puppmaster ca certificate will be available in 
+ # /var/lib/puppet/ssl/certs/ca.pem
+ conf:
+   puppetd:
+     server: "ip-10-8-37-170.ec2.internal"
+     # certname supports substitutions at runtime:
+     #   %i: instanceid 
+     #       Example: i-0123456
+     #   %f: fqdn of the machine
+     #       Example: ip-X-Y-Z.cloud.internal
+     #
+     # NB: the certname will automatically be lowercased as required by puppet
+   # ca_cert is a special case. It won't be added to puppet.conf.
+   # It holds the puppetmaster certificate in pem format. 
+   # It should be a multi-line string (using the | yaml notation for 
+   # multi-line strings).
+   # The puppetmaster certificate is located in 
+   # /var/lib/puppet/ssl/ca/ca_crt.pem on the puppetmaster host.
+   #
+   ca_cert: |
+     -----BEGIN CERTIFICATE-----
+     MIICVzCCAcCgAwIBAgIBATANBgkqhkiG9w0BAQUFADAzMTEwLwYDVQQDDChQdXBw
+     ZXQgQ0E6IGlwLTEwLTE5MC05NC0xMDIuZWMyLmludGVybmFsMB4XDTEyMDkxNTIw
+     NDY1MloXDTE3MDkxNTIwNDY1MlowMzExMC8GA1UEAwwoUHVwcGV0IENBOiBpcC0x
+     MC0xOTAtOTQtMTAyLmVjMi5pbnRlcm5hbDCBnzANBgkqhkiG9w0BAQEFAAOBjQAw
+     gYkCgYEAvOgvUXZNONvLCxXcJuavWuKPv7y9Wb/jfKlk1K+3sUP/Ak7BlIcmkCvU
+     /zhIY/PlBKTN/Ijo1ya3kdmjlYAERKJV/NecVHosbh5zXHOqiiguSejtInaAF0bm
+     xtoB0z3lzQ1LLqSRh7dSV4YQaouHbTWkBvn9pC5t1RpDhYOTRMMCAwEAAaN7MHkw
+     HQYDVR0OBBYEFG7IgiaWHwFF++NJzYw0WUwlmT+/MA4GA1UdDwEB/wQEAwIBBjA3
+     BglghkgBhvhCAQ0EKhYoUHVwcGV0IFJ1YnkvT3BlblNTTCBJbnRlcm5hbCBDZXJ0
+     aWZpY2F0ZTAPBgNVHRMBAf8EBTADAQH/MA0GCSqGSIb3DQEBBQUAA4GBAGKXXzDv
+     7dnVnpw7DXXH/bWhM9QNP/WU2TO28W4/nWVR+yozYytYO//OV99tqVwJrqOU+1Um
+     2AGgtw8RdzMg0WR2+40va8FpotBLAJyK1VHAMSo1AG247smRvIgcy+4aBDXbLr26
+     eYyYfAaDBXruTGEE3s31WM8Q4EZdWH74cW3w
+     -----END CERTIFICATE-----
+
+runcmd:
+ - [ echo, '"running cloud init" > /tmp/cloudinit' ]
