@@ -47,7 +47,7 @@ puppet:
  # The puppmaster ca certificate will be available in 
  # /var/lib/puppet/ssl/certs/ca.pem
  conf:
-   puppetd:
+   agent:
      server: "ip-10-8-37-170.ec2.internal"
      # certname supports substitutions at runtime:
      #   %i: instanceid 
