@@ -1,6 +1,6 @@
 #cloud-config
 #Originally from http://bazaar.launchpad.net/~cloud-init-dev/cloud-init/trunk/view/head:/doc/examples/cloud-config.txt
-#Does a few basic Debian steps when spinning up a Debian wheezy AMI
+#Does a few basic Debian steps when spinning up a Ubuntu Precise AMI
 # Update apt database on first boot
 # (ie run apt-get update)
 #
